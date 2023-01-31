@@ -10,49 +10,53 @@ const conn = require("./db/conn");
 
 // Models
 const Tought = require("./models/Tought");
-const User = require("./models/User");
 
-// template engine
-app.engine("handlebars,", exphbs());
-app.set("view engine", "handlebars");
+// routes
+const toughtsRoutes = require("./routes/toughtsRoutes");
 
-// receber resposta do body
+const ToughController = require("./controllers/ToughtController");
+
+app.engine('handlebars', exphbs())
+app.set('view engine', 'handlebars')
+
 app.use(
   express.urlencoded({
     extended: true,
-  })
-);
+  }),
+)
 
 app.use(express.json());
 
-// session middware
+//session middleware
 app.use(
   session({
-    name: "session",
-    secret: "nosso_secret",
+    name: 'session',
+    secret: 'nosso_secret',
     resave: false,
     saveUninitialized: false,
     store: new FileStore({
       logFn: function () {},
-      path: require("path").join(require("os").tmpdir(), "sessions"),
+      path: require('path').join(require('os').tmpdir(), 'sessions'),
     }),
     cookie: {
       secure: false,
-      maxAge: 360000,
+      maxAge: 3600000,
       expires: new Date(Date.now() + 3600000),
       httpOnly: true,
     },
-  })
-);
+  }),
+)
 
 // flash messages
 app.use(flash());
 
-// public path
 app.use(express.static("public"));
 
 // set session to res
 app.use((req, res, next) => {
+  // console.log(req.session)
+  console.log(req.session.userid);
+
   if (req.session.userid) {
     res.locals.session = req.session;
   }
@@ -60,12 +64,14 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use("/toughts", toughtsRoutes);
+
+
+app.get("/", ToughController.showToughts);
+
 conn
-  .sync({ force: true })
-  // .sync()
+  .sync()
   .then(() => {
     app.listen(3000);
   })
-  .catch((err) => {
-    console.log(err);
-  });
+  .catch((err) => console.log(err));
