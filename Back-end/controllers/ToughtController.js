@@ -27,11 +27,11 @@ module.exports = class ToughtController {
     let emptyToughts = true;
 
     if (toughts.length > 0) {
-      emptyToughts = false
+      emptyToughts = false;
     }
 
-    console.log(toughts)
-    console.log(emptyToughts)
+    console.log(toughts);
+    console.log(emptyToughts);
 
     res.render("toughts/dashboard", { toughts, emptyToughts });
   }
@@ -49,6 +49,23 @@ module.exports = class ToughtController {
     await Tought.create(tought)
       .then(() => {
         req.flash("message", "Pensamento criado com sucesso!");
+        req.session.save(() => {
+          res.redirect("/toughts/dashboard");
+        });
+      })
+      .catch((err) => console.log("Aconteceu um erro: " + err));
+  }
+
+  static async updateToughtSave(req, res) {
+    const id = req.body.id;
+
+    const tought = {
+      title: req.body.title,
+    };
+
+    await Tought.update(tought, { where: { id: id } })
+      .then(() => {
+        req.flash("message", "Pensamento editado com sucesso!");
         req.session.save(() => {
           res.redirect("/toughts/dashboard");
         });
@@ -76,8 +93,8 @@ module.exports = class ToughtController {
 
     Tought.findOne({ where: { id: id }, raw: true })
       .then((tought) => {
-        res.render('toughts/edit', { tought })
+        res.render("toughts/edit", { tought });
       })
-      .catch((err) => console.log())
+      .catch((err) => console.log());
   }
 };
