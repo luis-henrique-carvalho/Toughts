@@ -291,3 +291,52 @@ footer span {
   font-weight: bold;
   color: #f6982d;
 }
+
+@media screen and (max-width: 600px) {
+  .home-header {
+    max-width: 80%;
+  }
+
+  .home-header form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home-header input[type="text"] {
+    width: 80%;
+    text-align: center;
+    /* margin-bottom: 0.5em; */
+  }
+
+  .order-container {
+    max-width: 90%;
+    white-space: nowrap;
+  }
+
+  .toughts-container figure {
+    max-width: 90%;
+  }
+
+  .toughts-container blockquote {
+    font-size: 1.5em;
+  }
+
+  .message {
+    max-width: 80%;
+  }
+
+  
+  
+  form input[type="submit"],
+  .btn {
+    padding: 0.5em 0.5em;
+    margin-bottom: 0;
+    text-align: center;
+    
+  }
+
+  .dashboard .label {
+    margin-right: .5em;
+  }
+}
